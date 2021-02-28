@@ -1,0 +1,20 @@
+{
+    "code": "cupnoodles.pricebyweight",
+    "name": "Price By Weight",
+    "description": "Price selected menu items by weight, for use in butcher shops and produce stands.",
+    "version": "v1.0.0",
+    "author": "CupNoodles",
+    "icon": {
+      "class": "fa fa-balance-scale",
+      "backgroundColor": "#1B294B",
+      "color": "#fff"
+    },
+    "homepage": "",
+    "require": {
+      "igniter.cart" : "*",
+      "igniter.coupons": "*",
+      "igniter.local": "*",
+      "igniter.user": "*",
+      "igniter.payregister": "*"
+    }
+  }
