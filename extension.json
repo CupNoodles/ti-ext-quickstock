@@ -1,7 +1,7 @@
 {
-    "code": "cupnoodles.pricebyweight",
-    "name": "Price By Weight",
-    "description": "Price selected menu items by weight, for use in butcher shops and produce stands.",
+    "code": "cupnoodles.quickstock",
+    "name": "Quick 86",
+    "description": "Single page to set items in and out of stock at each location.",
     "version": "v1.0.0",
     "author": "CupNoodles",
     "icon": {
