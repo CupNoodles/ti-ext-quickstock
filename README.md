@@ -6,6 +6,11 @@ Quick 86 creates a new locationable property that overrides a menu location's ou
 
 Global status (enabled/disabled) of each menu item can also be edited from each location view. 
 
+### Installation
+
+Clone this repo into `extensions/cupnoodles/quickstock` and hit the play button under 'Extensions'. 
+
+
 ### Admin Panel
 New editor view is registered at /admin/cupnoodles/quickstock/quickstock/view, under 'Restaurant' on the admin menu. 
 
