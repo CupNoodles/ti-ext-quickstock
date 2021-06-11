@@ -48,7 +48,7 @@ class Extension extends BaseExtension
     public function boot()
     {
 
-        // this allows templa   tes to access the isOutOfStock() function
+        // this allows templates to access the isOutOfStock() function
         Menus_Model::extend(function ($model) {
             $model->addDynamicMethod('isOutOfStock', function($location_id) use ($model) {
                 if(DB::table('locationables')
@@ -65,6 +65,7 @@ class Extension extends BaseExtension
             });
         });
 
+        // error when adding out of stock to cart
         Event::listen('cart.adding', function ($action, $cartItem){
             if($cartItem->model->isOutOfStock(app('location')->getId())){
                 unset($cartItem);
@@ -72,6 +73,19 @@ class Extension extends BaseExtension
             }
 
         });
+
+        // this only works if you've got pricebyweight installed - can't find a cart event for this step, strangely enough
+        Event::listen('cupnoodles.cartBoxByWeight.onProceedToCheckout', function ($cart){
+            
+            foreach($cart->content() as $key=>$cartItem){
+                if($cartItem->model->isOutOfStock(app('location')->getId())){
+                    throw new ApplicationException($cartItem->name . ' ' . lang('cupnoodles.quickstock::default._out_of_stock_error'));
+                }    
+            }
+
+        });
+
+
 
     }
 
