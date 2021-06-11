@@ -48,10 +48,9 @@ class Extension extends BaseExtension
     public function boot()
     {
 
-        // this allows tempaltes to access the isOutOfStock() function
+        // this allows templa   tes to access the isOutOfStock() function
         Menus_Model::extend(function ($model) {
             $model->addDynamicMethod('isOutOfStock', function($location_id) use ($model) {
-                
                 if(DB::table('locationables')
                 ->where('location_id', $location_id)
                 ->where('locationable_id', $model->menu_id)
@@ -67,8 +66,7 @@ class Extension extends BaseExtension
         });
 
         Event::listen('cart.adding', function ($action, $cartItem){
-            $location = App::make('location');
-            if($cartItem->model->isOutOfStock($location->getId())){
+            if($cartItem->model->isOutOfStock(app('location')->getId())){
                 unset($cartItem);
                 throw new ApplicationException(lang('cupnoodles.quickstock::default.item_out_of_stock_error'));
             }
