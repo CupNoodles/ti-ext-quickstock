@@ -50,14 +50,22 @@ class Extension extends BaseExtension
 
         // this allows templates to access the isOutOfStock() function
         Menus_Model::extend(function ($model) {
-            $model->addDynamicMethod('isOutOfStock', function($location_id) use ($model) {
-                if(DB::table('locationables')
+            $model->addDynamicMethod('isOutOfStock', function($location_id, $orderDateTime) use ($model) {
+                $oos = DB::table('locationables')
                 ->where('location_id', $location_id)
                 ->where('locationable_id', $model->menu_id)
                 ->where('locationable_type', 'menu_out_of_stock')
-                ->count()
-                ){
-                    return true;
+                ->get();
+                if(count($oos)){
+                    if($oos[0]->options == ''){
+                        return true;
+                    }
+                    if(strtotime($oos[0]->options) <= $orderDateTime->timestamp){
+                        return false;
+                    }
+                    else{
+                        return true;
+                    }
                 }
                 else{
                     return false;
@@ -67,18 +75,17 @@ class Extension extends BaseExtension
 
         // error when adding out of stock to cart
         Event::listen('cart.adding', function ($action, $cartItem){
-            if($cartItem->model->isOutOfStock(app('location')->getId())){
+            if($cartItem->model->isOutOfStock(app('location')->getId(), app('location')->orderDateTime())){
                 unset($cartItem);
                 throw new ApplicationException(lang('cupnoodles.quickstock::default.item_out_of_stock_error'));
             }
-
         });
 
-        // this only works if you've got pricebyweight installed - can't find a cart event for this step, strangely enough
-        Event::listen('cupnoodles.cartBoxByWeight.onProceedToCheckout', function ($cart){
+        
+        Event::listen('igniter.checkout.beforeSaveOrder', function ($order, $data){
             
-            foreach($cart->content() as $key=>$cartItem){
-                if($cartItem->model->isOutOfStock(app('location')->getId())){
+            foreach($order->cart as $key=>$cartItem){
+                if($cartItem->model->isOutOfStock(app('location')->getId(), app('location')->orderDateTime())){
                     throw new ApplicationException($cartItem->name . ' ' . lang('cupnoodles.quickstock::default._out_of_stock_error'));
                 }    
             }
@@ -87,23 +94,35 @@ class Extension extends BaseExtension
 
 
 
+
+
     }
 
 
-    public function registerFormWidgets()
+    public function registerSchedule($schedule)
     {
 
+        // delete any out_of_stock locationables for today or earlier
+        $schedule->call(function () {
+            $out_of_stocks = DB::table('locationables')
+                ->where('locationable_type', 'menu_out_of_stock')
+                ->get();
+            
+            foreach($out_of_stocks as $k=>$oos){
+                echo $oos->options;
+                
+                if( $oos->options != ''){
+                    if(strtotime($oos->options) <= time()){
+                        
+                        $oos->delete();
+                    }
+                }
+                
+            }
+        })->dailyAt('00:15');
+
     }
 
-    /**
-     * Registers any front-end components implemented in this extension.
-     *
-     * @return array
-     */
-    public function registerComponents()
-    {
-
-    }
 
     /**
      * Registers any admin permissions used by this extension.

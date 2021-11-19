@@ -1,5 +1,11 @@
 $(document).ready(function(){
 
+
+    $.fn.datepicker.defaults.format = "mm/dd/yyyy";
+    $('.datepicker').datepicker({
+        startDate: '+1d'
+    });
+
     // set the tab on load
     var url = document.URL;
     var hash = url.substring(url.indexOf('#')) ;
@@ -14,30 +20,57 @@ $(document).ready(function(){
         });
     });
 
-    if(hash == url){
-        $('#global').click();
-    }
+
 
     $('.quickstock-checkbox').on('change', function(){
+        ajaxRequest($(this),$('#' + $(this).data('location') + '_' + $(this).data('menu') + '_back_in_stock_date').val() );
+    });
 
-        // disable this until we get back confirmation that it worked
-        $(this).prop("disabled", true );
+    $('a.in_stock_date_action').on('click', function(){
+        ajaxRequest($('#out_of_stock_'+ $(this).data('location') + '_' + $(this).data('menu')), $(this).data('datepicker-value'));
+    });
+    $('input.in_stock_date_action').on('change', function(){
+        ajaxRequest($('#out_of_stock_'+ $(this).data('location') + '_' + $(this).data('menu')), $(this).val());
+    });
+
+    function ajaxRequest($stock_el, date_val){
         $.ajax({
             url: '/admin/cupnoodles/quickstock/quickstock/save',
             type: 'POST',
             dataType: 'json',
             data: {
-              location_id: $(this).data('location'),
-              menu_id: $(this).data('menu'),
-              action: $(this).attr('name'),
-              val: $(this).is(':checked')
+              location_id: $stock_el.data('location'),
+              menu_id: $stock_el.data('menu'),
+              action: $stock_el.attr('name'),
+              val: $stock_el.is(':checked'),
+              in_stock_date: date_val
             },
             success: function(data) {
-                $('#'+(data['action'] == 'status' ? 'status' : 'out_of_stock')+'_'+data['location_id']+'_'+data['menu_id']).prop("disabled", false );
-            },
-            
+                changeSuccess(data);
+            }
         });
-    });
+    }
 
+
+
+    function changeSuccess(data){
+        if(data['action'] == 'out_of_stock'){
+            if(data['val'] == 'true'){
+                $('#until_'+data['location_id']+'_'+data['menu_id']+'_container').hide();
+            }
+            else{
+                $('#until_'+data['location_id']+'_'+data['menu_id']+'_container').show();
+            }
+        }
+
+        $('#date_button_'+ data['location_id'] + '_' + data['menu_id']).text(data['in_stock_date_text']);
+        $('.dropdown.show').removeClass('show');
+        
+    }
 
 });
+
+
+
+
+
