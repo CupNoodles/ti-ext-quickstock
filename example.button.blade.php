@@ -4,8 +4,8 @@ This is an example of how to show a menu item's out-of-stock locationable status
 Try using this file by replacing extensions/igniter/local/components/menu/button.blade.php with this file, or edit the component file through the admin UI.
 -->
 <button
-    class="btn btn-light btn-sm btn-cart{{ ($menuItemObject->mealtimeIsNotAvailable || $menuItemObject->model->isOutOfStock($location->getId()) ) ? ' disabled' : '' }}"
-    @if (!$menuItemObject->mealtimeIsNotAvailable && !$menuItemObject->model->isOutOfStock($location->getId()))
+    class="btn btn-light btn-sm btn-cart{{ ($menuItemObject->mealtimeIsNotAvailable || $menuItemObject->model->isOutOfStock($location->getId(), $location->orderDateTime()) ) ? ' disabled' : '' }}"
+    @if (!$menuItemObject->mealtimeIsNotAvailable && !$menuItemObject->model->isOutOfStock($location->getId(), $location->orderDateTime()))
     @if ($menuItemObject->hasOptions)
     data-cart-control="load-item"
     data-menu-id="{{ $menuItem->menu_id }}"
@@ -17,7 +17,7 @@ Try using this file by replacing extensions/igniter/local/components/menu/button
     @endif
     @elseif($menuItemObject->mealtimeIsNotAvailable)
     title="{{ implode("\r\n", $menuItemObject->mealtimeTitles) }}"
-    @elseif($menuItemObject->model->isOutOfStock($location->getId()))
+    @elseif($menuItemObject->model->isOutOfStock($location->getId(), $location->orderDateTime()))
     title="Out of stock"
     @endif
 >
