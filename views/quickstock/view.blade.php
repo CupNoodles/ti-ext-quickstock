@@ -1,6 +1,3 @@
-@php
-
-@endphp
 <style>
 body{
     margin-bottom: 0;
@@ -24,7 +21,7 @@ body{
 <div class="tab-content">
 
     @foreach($locations as $key => $location)
-        <div class="tab-pane  {{ ($value->active) ? 'active' : '' }}" id="location-{{ $location->location_id }}">
+        <div class="tab-pane  {{ ($location->active) ? 'active' : '' }}" id="location-{{ $location->location_id }}">
                 <div class="form-fields">
                 @foreach ($location->categories as $key=>$category)
                 <h4>{{ $category->name }}</h4>
