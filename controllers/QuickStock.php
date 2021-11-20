@@ -71,9 +71,10 @@ class QuickStock extends \Admin\Classes\AdminController
             if($post['val'] == 'false'){// false means out of stock
                 DB::table('locationables')->updateOrInsert([
                     'location_id'      => $post['location_id'],
-                    'locationable_id'             => $post['menu_id']],
+                    'locationable_id'             => $post['menu_id'],
+                    'locationable_type' => 'menu_out_of_stock'
+                ],
                     [
-                    'locationable_type' => 'menu_out_of_stock',
                     'options' => $post['in_stock_date']
                     ]);
             }
