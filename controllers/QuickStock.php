@@ -64,7 +64,7 @@ class QuickStock extends \Admin\Classes\AdminController
 
         // chrome doesn't send disabled form elements until after they're activated, so default to forever if blank
         if(!isset($post['in_stock_date'])){
-            $post['in_stock_date'] == '';
+            $post['in_stock_date'] = '';
         }
 
         if($post['action'] == 'out_of_stock'){
