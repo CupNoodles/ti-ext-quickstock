@@ -109,17 +109,19 @@ class Extension extends BaseExtension
                 ->get();
             
             foreach($out_of_stocks as $k=>$oos){
-                echo $oos->options;
-                
+
                 if( $oos->options != ''){
                     if(strtotime($oos->options) <= time()){
-                        
-                        $oos->delete();
+                        DB::table('locationables')
+                        ->where('locationable_type', 'menu_out_of_stock')
+                        ->where('location_id', $oos->location_id)
+                        ->where('locationable_id', $oos->locationable_id)
+                        ->delete();;
                     }
                 }
                 
             }
-        })->dailyAt('00:15');
+        })->everyMinute();//->dailyAt('00:15');
 
     }
 
