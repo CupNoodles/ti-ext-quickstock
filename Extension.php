@@ -3,6 +3,7 @@
 namespace CupNoodles\QuickStock;
 
 use Admin\Models\Menus_model;
+use Admin\Models\Menu_item_option_values_model;
 use System\Classes\BaseExtension;
 use DB;
 use Event;
@@ -73,6 +74,31 @@ class Extension extends BaseExtension
             });
         });
 
+        // this allows templates to access the isOutOfStock() function
+        Menu_item_option_values_model::extend(function ($model) {
+            $model->addDynamicMethod('isOutOfStock', function($location_id, $orderDateTime) use ($model) {
+                $oos = DB::table('locationables')
+                ->where('location_id', $location_id)
+                ->where('locationable_id', $model->option_value_id)
+                ->where('locationable_type', 'option_value_out_of_stock')
+                ->get();
+                if(count($oos)){
+                    if($oos[0]->options == ''){
+                        return true;
+                    }
+                    if(strtotime($oos[0]->options) <= $orderDateTime->timestamp){
+                        return false;
+                    }
+                    else{
+                        return true;
+                    }
+                }
+                else{
+                    return false;
+                }
+            });
+        });
+
         // error when adding out of stock to cart
         Event::listen('cart.adding', function ($action, $cartItem){
             if($cartItem->model->isOutOfStock(app('location')->getId(), app('location')->orderDateTime())){
@@ -116,12 +142,29 @@ class Extension extends BaseExtension
                         ->where('locationable_type', 'menu_out_of_stock')
                         ->where('location_id', $oos->location_id)
                         ->where('locationable_id', $oos->locationable_id)
-                        ->delete();;
+                        ->delete();
                     }
                 }
                 
             }
-        })->everyMinute();//->dailyAt('00:15');
+            $out_of_stocks_option_values = DB::table('locationables')
+                ->where('locationable_type', 'option_value_out_of_stock')
+                ->get();
+            
+            foreach($out_of_stocks as $k=>$oos){
+
+                if( $oos->options != ''){
+                    if(strtotime($oos->options) <= time()){
+                        DB::table('locationables')
+                        ->where('locationable_type', 'option_value_out_of_stock')
+                        ->where('location_id', $oos->location_id)
+                        ->where('locationable_id', $oos->locationable_id)
+                        ->delete();
+                    }
+                }
+                
+            }
+        })->everyHour();
 
     }
 
