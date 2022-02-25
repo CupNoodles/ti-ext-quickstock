@@ -21,6 +21,15 @@ Please note that on this view, while the 'out of stock' column is specific per l
 
 ### Settings
 
+Use Print Docket names:
+If you have the thoughtco.printer extension installed, this will show the print docket name on Quick 86 instead of the order menu name. Useful for kitchens that already have easy-to-identify printer docket names set up. 
+
+Order Menu items alphabtically:
+By default, Categories and Menus will display on Quick 86 in the same order that they show up on the front-end ordering menu. Enebling alphabetical sort will sort items alphabetically, by either menu name or print docket name, if the previous option is enabled. 
+
+Manage Menu Options in Quick 86:
+Enabling this will show Menu Options on Quick 86. Please note that you must have the `isOutOfStock()` function referenced in your custom theme in order for this to have any effect. Option values are also referenced by `option_value_id`, therefore if many menu items have the option to add "Diet Coke" and you mark it as out of stock on one item, "Diet Coke" will be out of stock for *ALL* menu items. 
+
 
 
 ### Usage within a theme

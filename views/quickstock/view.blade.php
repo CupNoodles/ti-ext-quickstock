@@ -46,7 +46,7 @@ body{
                                         </a>
                                     </td>
                                                                                             
-                                    <td class="list-col-index-1 list-col-name-menu-name list-col-type-text ">{{ $menu->menu_name }}</td>
+                                    <td class="list-col-index-1 list-col-name-menu-name list-col-type-text ">{{ CupNoodles\QuickStock\Models\QuickStockSettings::get('print_docket_names') && $menu->print_docket ? $menu->print_docket : $menu->menu_name }}</td>
                                     <td class="list-col-index-5 list-col-name-special-status list-col-type-switch ">
                                         <div class="field-custom-container">
                                             <div class="custom-control custom-switch">

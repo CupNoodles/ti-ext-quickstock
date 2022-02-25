@@ -18,10 +18,19 @@ return [
             ],
         ],
         'fields' => [
+            'print_docket_names' => [
+                'label' => 'lang:cupnoodles.quickstock::default.print_docket_names',
+                'type' => 'switch',
+                'default' => 'false',
+            ],
+            'order_alphabetical' => [
+                'label' => 'lang:cupnoodles.quickstock::default.order_alphabetical',
+                'type' => 'switch',
+                'default' => 'false',
+            ],
             'quickstock_options' => [
                 'label' => 'lang:cupnoodles.quickstock::default.quickstock_setting_options',
                 'type' => 'switch',
-                'span' => 'left',
                 'default' => 'false',
             ],
         ],

@@ -12,6 +12,9 @@ use Admin\Traits\Locationable;
 use Admin\Facades\AdminAuth;
 use Admin\Models\Staffs_model;
 
+use CupNoodles\QuickStock\Models\QuickStockSettings;
+
+
 class QuickStock extends \Admin\Classes\AdminController
 {
    
@@ -110,14 +113,32 @@ class QuickStock extends \Admin\Classes\AdminController
 
     public function getCategories($location_id){
 
+
+
         $list = Categories_model::isEnabled()->orderBy('priority')->with([
             'menus', 
             'menus.menu_options', 
             'menus.menu_options.menu_option_values',
             'menus.menu_options.option_values'])->get();
 
-        // TODO order the list and display by print docket name (if set in settings)
 
+        if(QuickStockSettings::get('order_alphabetical') ){
+            foreach($list as $key=>$category){
+                $list[$key]->menus = $list[$key]->menus->sort(function($a, $b){
+                    $aname = $a->menu_name;
+                    $bname = $b->menu_name;
+                    if( QuickStockSettings::get('print_docket_names') ){
+                        if($a->print_docket){
+                            $aname = $a->print_docket;
+                        }
+                        if($b->print_docket){
+                            $bname = $b->print_docket;
+                        }
+                    }
+                    return strcmp($aname, $bname);
+                });
+            }
+        }
 
         // set oos on each menu item
         foreach($list as $key=>$category){
