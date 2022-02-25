@@ -14,7 +14,9 @@ return [
     'out_of_stock' => 'Out of Stock',
     'in_stock' => 'In Stock',
     'tomorrow' => 'Tomorrow',
-    'forever' => 'Forever'
+    'forever' => 'Forever',
+
+    'quickstock_setting_options' => 'Manage Menu Options in Quick 86'
 
 ];
 ?>

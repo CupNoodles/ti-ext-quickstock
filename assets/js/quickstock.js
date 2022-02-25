@@ -22,15 +22,42 @@ $(document).ready(function(){
 
 
 
-    $('.quickstock-checkbox').on('change', function(){
-        ajaxRequest($(this),$('#' + $(this).data('location') + '_' + $(this).data('menu') + '_back_in_stock_date').val() );
+    $('.quickstock-menu-checkbox').on('change', function(){
+        ajaxRequest(
+            $(this),
+            $('#' + $(this).data('location') + '_' + $(this).data('menu') + '_back_in_stock_date').val() 
+            );
+    });
+
+    $('.quickstock-option-checkbox').on('change', function(){
+        ajaxRequest(
+            $(this),
+            $('#' + $(this).data('location') + '_' + $(this).data('menu') + '_' + $(this).data('option') + '_' +$(this).data('option-value') + '_back_in_stock_date').val() 
+            );
     });
 
     $('a.in_stock_date_action').on('click', function(){
-        ajaxRequest($('#out_of_stock_'+ $(this).data('location') + '_' + $(this).data('menu')), $(this).data('datepicker-value'));
+        if($(this).data('option-value')){
+            ajaxRequest(
+                $('#out_of_stock_' + $(this).data('location') + '_' + $(this).data('menu') + '_' + $(this).data('option') + '_' + $(this).data('option-value')),
+                $(this).data('datepicker-value')
+            ); 
+        }
+        else{
+            ajaxRequest($('#out_of_stock_'+ $(this).data('location') + '_' + $(this).data('menu')), $(this).data('datepicker-value'));
+        }
+
     });
     $('input.in_stock_date_action').on('change', function(){
-        ajaxRequest($('#out_of_stock_'+ $(this).data('location') + '_' + $(this).data('menu')), $(this).val());
+        if($(this).data('option-value')){
+            ajaxRequest(
+                $('#out_of_stock_' + $(this).data('location') + '_' + $(this).data('menu') + '_' + $(this).data('option') + '_' +$(this).data('option-value')),
+                $(this).val()
+            ); 
+        }
+        else{
+            ajaxRequest($('#out_of_stock_'+ $(this).data('location') + '_' + $(this).data('menu')), $(this).val());
+        }
     });
 
     function ajaxRequest($stock_el, date_val){
@@ -41,6 +68,7 @@ $(document).ready(function(){
             data: {
               location_id: $stock_el.data('location'),
               menu_id: $stock_el.data('menu'),
+              option_value: $stock_el.data('option-value'),
               action: $stock_el.attr('name'),
               val: $stock_el.is(':checked'),
               in_stock_date: date_val
@@ -55,15 +83,30 @@ $(document).ready(function(){
 
     function changeSuccess(data){
         if(data['action'] == 'out_of_stock'){
-            if(data['val'] == 'true'){
-                $('#until_'+data['location_id']+'_'+data['menu_id']+'_container').hide();
+            if(typeof(data['option_value']) !== 'undefined'){
+                if(data['val'] == 'true'){
+                    $('.until_'+data['location_id']+'_'+data['option_value']+'_container').hide();
+                    $('.out_of_stock_option_value_'+data['location_id']+'_'+data['option_value']).prop('checked', true);
+                }
+                else{
+                    $('.until_'+data['location_id']+'_'+data['option_value']+'_container').show();
+                    $('.out_of_stock_option_value_'+data['location_id']+'_'+data['option_value']).prop('checked', false);
+                }
+                $('.date_button_option_value_'+ data['location_id'] + '_' + data['option_value']).text(data['in_stock_date_text']);
+                
             }
             else{
-                $('#until_'+data['location_id']+'_'+data['menu_id']+'_container').show();
+                if(data['val'] == 'true'){
+                    $('#until_'+data['location_id']+'_'+data['menu_id']+'_container').hide();
+                }
+                else{
+                    $('#until_'+data['location_id']+'_'+data['menu_id']+'_container').show();
+                }
+                $('#date_button_'+ data['location_id'] + '_' + data['menu_id']).text(data['in_stock_date_text']);
             }
         }
 
-        $('#date_button_'+ data['location_id'] + '_' + data['menu_id']).text(data['in_stock_date_text']);
+        
         $('.dropdown.show').removeClass('show');
         
     }

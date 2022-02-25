@@ -68,11 +68,17 @@ class QuickStock extends \Admin\Classes\AdminController
         }
 
         if($post['action'] == 'out_of_stock'){
+            $locationable_id = $post['menu_id'];
+            $locationable_type = 'menu_out_of_stock';
+            if(isset($post['option_value'])){
+                $locationable_id = $post['option_value'];
+                $locationable_type = 'option_value_out_of_stock';
+            }
             if($post['val'] == 'false'){// false means out of stock
                 DB::table('locationables')->updateOrInsert([
-                    'location_id'      => $post['location_id'],
-                    'locationable_id'             => $post['menu_id'],
-                    'locationable_type' => 'menu_out_of_stock'
+                    'location_id'       => $post['location_id'],
+                    'locationable_id'   => $locationable_id,
+                    'locationable_type' => $locationable_type
                 ],
                     [
                     'options' => $post['in_stock_date']
@@ -81,8 +87,8 @@ class QuickStock extends \Admin\Classes\AdminController
             else{
                 DB::table('locationables')
                 ->where('location_id', $post['location_id'])
-                ->where('locationable_id', $post['menu_id'])
-                ->where('locationable_type', 'menu_out_of_stock')
+                ->where('locationable_id', $locationable_id)
+                ->where('locationable_type', $locationable_type )
                 ->delete();
             }
         }
@@ -104,13 +110,19 @@ class QuickStock extends \Admin\Classes\AdminController
 
     public function getCategories($location_id){
 
-        $list = Categories_model::isEnabled()->orderBy('priority')->with(['menus'])->get();
+        $list = Categories_model::isEnabled()->orderBy('priority')->with([
+            'menus', 
+            'menus.menu_options', 
+            'menus.menu_options.menu_option_values',
+            'menus.menu_options.option_values'])->get();
+
+        // TODO order the list and display by print docket name (if set in settings)
 
 
         // set oos on each menu item
-        foreach($list as $key=>$value){
+        foreach($list as $key=>$category){
 
-            foreach($value->menus as $k=>$menu){
+            foreach($category->menus as $k=>$menu){
                 $tmp = $list[$key]->menus[$k];
                 $out_of_stock = DB::table('locationables')
                 ->where('location_id', $location_id)
@@ -127,8 +139,33 @@ class QuickStock extends \Admin\Classes\AdminController
                 }
                 $tmp->in_stock_date_text = $this->dateTextFromDate($tmp->in_stock_date);
                 $list[$key]->menus[$k] = $tmp;
+
+                // set oos on each option value
+                foreach($menu['menu_options'] as $j=>$option){
+                    foreach($option['option_values'] as $l=>$option_value){
+                        $tmp_val = $list[$key]->menus[$k]->menu_options[$j]->option_values[$l];
+                        $out_of_stock = DB::table('locationables')
+                        ->where('location_id', $location_id)
+                        ->where('locationable_id', $option_value->option_value_id)
+                        ->where('locationable_type', 'option_value_out_of_stock')
+                        ->get();
+                        
+                        $tmp_val->out_of_stock = count($out_of_stock);
+                        if(count($out_of_stock)){
+                            $tmp_val->in_stock_date = $out_of_stock->first()->options;
+                        }
+                        else{
+                            $tmp_val->in_stock_date = date('m/d/Y', strtotime("+1 day"));
+                        }
+                        $tmp_val->in_stock_date_text = $this->dateTextFromDate($tmp_val->in_stock_date);
+                        $list[$key]->menus[$k]->menu_options[$j]->option_values[$l] = $tmp_val;
+                    }
+                }
             }
         }
+
+
+
         return $list;
     }
 

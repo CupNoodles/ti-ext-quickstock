@@ -125,6 +125,19 @@ class Extension extends BaseExtension
 
     }
 
+    public function registerSettings()
+    {
+        return [
+            'settings' => [
+                'label' => 'Quickstock Settings',
+                'description' => 'Manage quickstock settings',
+                'icon' => 'fa fa-balance-scale',
+                'model' => 'CupNoodles\QuickStock\Models\QuickStockSettings',
+                'permissions' => ['Module.QuickStock'],
+            ],
+        ];
+    }
+
 
     /**
      * Registers any admin permissions used by this extension.
