@@ -164,7 +164,7 @@ class Extension extends BaseExtension
                 }
                 
             }
-        })->everyHour();
+        })->hourly();
 
     }
 
