@@ -2,6 +2,9 @@
 body{
     margin-bottom: 0;
 }
+.option-row{
+    display: none;
+}
 </style>
 <div class="form-widget">
     <div id="form-primary-tabs" class="primary-tabs " data-control="form-tabs" data-store-name="widget.menus-form-edit">
@@ -42,8 +45,13 @@ body{
                                     
                                     <td class="list-action ">
                                         <a class="btn btn-edit" href="/admin/menus/edit/{{$menu->menu_id}}" data-original-title="" title="">
-                                        <i class="fa fa-pencil"></i>
+                                            <i class="fa fa-pencil"></i>
                                         </a>
+                                        @if( CupNoodles\QuickStock\Models\QuickStockSettings::get('quickstock_options') && count($menu['menu_options']) )
+                                            <a class="btn btn-edit menu-options-chevron-link" href="#" data-menu-id="{{ $menu->menu_id }}">
+                                                <i class="fas fa-chevron-right chevron-link-{{ $menu->menu_id }}"></i>
+                                            </a>
+                                        @endif
                                     </td>
                                                                                             
                                     <td class="list-col-index-1 list-col-name-menu-name list-col-type-text ">{{ CupNoodles\QuickStock\Models\QuickStockSettings::get('print_docket_names') && $menu->print_docket ? $menu->print_docket : $menu->menu_name }}</td>
@@ -100,7 +108,7 @@ body{
                             @if( CupNoodles\QuickStock\Models\QuickStockSettings::get('quickstock_options') && count($menu['menu_options']) )
                                 @foreach($menu['menu_options'] as $option)
                                     @foreach($option['option_values'] as $option_value)
-                                        <tr>
+                                        <tr class="option-row option-row-{{ $menu->menu_id }}">
                                             <td class="list-action ">
                                             </td>
                                             <td class="list-col-index-1 list-col-name-menu-option-name list-col-type-text ">

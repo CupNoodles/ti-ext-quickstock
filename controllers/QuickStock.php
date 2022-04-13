@@ -11,21 +11,22 @@ use Admin\Models\Menus_model;
 use Admin\Traits\Locationable;
 use Admin\Facades\AdminAuth;
 use Admin\Models\Staffs_model;
-
+use Admin\Facades\Template;
 use CupNoodles\QuickStock\Models\QuickStockSettings;
 
 
 class QuickStock extends \Admin\Classes\AdminController
 {
-   
-    use Locationable;
-    //protected $requiredPermissions = 'Admin.UnitsOfMeasure';
+
 
     public function __construct()
     {
         parent::__construct();
 
         AdminMenu::setContext('quickstock', 'restaurant');
+
+        Template::setTitle(lang('cupnoodles.quickstock::default.side_menu'));
+        
     }
 
     public function view($route)

@@ -21,6 +21,27 @@ $(document).ready(function(){
     });
 
 
+    // option show/hide
+    $('.menu-options-chevron-link').on('click', function(e){
+        e.preventDefault();
+
+        menu_id = $(this).data('menu-id');
+        if( $('.chevron-link-'+menu_id).hasClass('fa-chevron-right')){
+            showOptions(menu_id);
+        }
+        else{
+            hideOptions(menu_id);
+        }
+    });
+    function showOptions(menu_id){
+        $('.chevron-link-'+menu_id).removeClass('fa-chevron-right').addClass('fa-chevron-down');
+        $('.option-row-'+menu_id).show();
+    }
+    function hideOptions(menu_id){
+        $('.chevron-link-'+menu_id).removeClass('fa-chevron-down').addClass('fa-chevron-right');
+        $('.option-row-'+menu_id).hide();
+    }
+
 
     $('.quickstock-menu-checkbox').on('change', function(){
         ajaxRequest(
