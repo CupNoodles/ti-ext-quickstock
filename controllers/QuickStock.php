@@ -47,12 +47,11 @@ class QuickStock extends \Admin\Classes\AdminController
         
         
         
-        //$this->vars['admin_location'] = AdminLocation::getId();
 
         $this->addJS('extensions/cupnoodles/quickstock/assets/js/quickstock.js', 'cupnoodles-quickstock');
 
+        $this->addJs('extensions/cupnoodles/quickstock/assets/js/moment.js', 'moment-js');
 
-        $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
         $this->addCss('~/app/admin/formwidgets/datepicker/assets/vendor/datepicker/bootstrap-datepicker.min.css', 'bootstrap-datepicker-css');
         $this->addJs('~/app/admin/formwidgets/datepicker/assets/vendor/datepicker/bootstrap-datepicker.min.js', 'bootstrap-datepicker-js');
         if (setting('default_language') != 'en')

@@ -15,21 +15,7 @@ use Igniter\Flame\Exception\ApplicationException;
  */
 class Extension extends BaseExtension
 {
-    /**
-     * Returns information about this extension.
-     *
-     * @return array
-     */
-    public function extensionMeta()
-    {
-        return [
-            'name'        => 'QuickStock',
-            'author'      => 'CupNoodles',
-            'description' => 'Single page to set items in and out of stock at each location.',
-            'icon'        => 'fa-calendar-times',
-            'version'     => '1.0.0'
-        ];
-    }
+
 
     /**
      * Register method, called when the extension is first registered.

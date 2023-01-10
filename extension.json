@@ -11,10 +11,6 @@
     },
     "homepage": "",
     "require": {
-      "igniter.cart" : "*",
-      "igniter.coupons": "*",
-      "igniter.local": "*",
-      "igniter.user": "*",
-      "igniter.payregister": "*"
+      "igniter.cart" : "*"
     }
   }

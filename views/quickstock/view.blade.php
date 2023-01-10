@@ -12,7 +12,7 @@ body{
             <ul class="form-nav nav nav-tabs">
                 @foreach($locations as $key => $value)
                     <li class="nav-item">
-                        <a class="nav-link {{ ($value->active) ? 'active' : '' }}" href="#location-{{ $value->location_id }}" data-toggle="tab" data-original-title="" title="" 
+                        <a class="nav-link {{ ($value->active) ? 'active' : '' }}" href="#location-{{ $value->location_id }}" data-bs-toggle="tab" data-original-title="" title="" 
                         >{{ $value->location_name }}</a>
                     </li>
                 @endforeach
@@ -57,11 +57,11 @@ body{
                                     <td class="list-col-index-1 list-col-name-menu-name list-col-type-text ">{{ CupNoodles\QuickStock\Models\QuickStockSettings::get('print_docket_names') && $menu->print_docket ? $menu->print_docket : $menu->menu_name }}</td>
                                     <td class="list-col-index-5 list-col-name-special-status list-col-type-switch ">
                                         <div class="field-custom-container">
-                                            <div class="custom-control custom-switch">
+                                            <div class="custom-control custom-switch form-check form-switch">
                                                 <input type="checkbox" 
                                                 name="out_of_stock" 
                                                 id="out_of_stock_{{ $location->location_id }}_{{ $menu->menu_id }}" 
-                                                class="custom-control-input quickstock-menu-checkbox" 
+                                                class="custom-control-input quickstock-menu-checkbox  form-check-input" 
                                                 value="1"
                                                 data-location="{{ $location->location_id }}"
                                                 data-menu="{{ $menu->menu_id }}"
@@ -72,8 +72,8 @@ body{
                                     </td>
                                     <td>
 
-                                    <div id="until_{{ $location->location_id }}_{{ $menu->menu_id }}_container" {!! $menu->out_of_stock ? '' : 'style="display: none"' !!} >
-                                        <button id="date_button_{{ $location->location_id }}_{{ $menu->menu_id }}" class="btn font-weight-bold p-0 dropdown-toggle text-secondary" type="button" data-toggle="dropdown">{{$menu->in_stock_date_text}}</button>
+                                    <div id="until_{{ $location->location_id }}_{{ $menu->menu_id }}_container" {!! $menu->out_of_stock ? '' : 'style="display: none"' !!} class="dropdown">
+                                        <button id="date_button_{{ $location->location_id }}_{{ $menu->menu_id }}" class="btn font-weight-bold p-0 dropdown-toggle text-secondary" type="button" data-bs-toggle="dropdown">{{$menu->in_stock_date_text}}</button>
                                         <div class="dropdown-menu dropdown" aria-labelledby="dropdownMenuButton">
                                             <a  class="dropdown-item in_stock_date_action" 
                                                 data-datepicker-value="{{ date(lang('cupnoodles.quickstock::default.date_format_php'), strtotime("+1 day"))}}"
