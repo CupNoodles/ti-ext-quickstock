@@ -116,7 +116,7 @@ body{
                                             </td>
                                             <td class="list-col-index-5 list-col-name-special-status list-col-type-switch ">
                                                 <div class="field-custom-container">
-                                                    <div class="custom-control custom-switch">
+                                                    <div class="custom-control custom-switch  form-check form-switch">
                                                         <input type="checkbox" 
                                                         name="out_of_stock" 
                                                         id="out_of_stock_{{ $location->location_id }}_{{ $menu->menu_id }}_{{ $option->option_id }}_{{ $option_value->option_value_id }}" 
@@ -136,10 +136,10 @@ body{
                                             <div 
                                             id="until_{{ $location->location_id }}_{{ $menu->menu_id }}_{{ $option->option_id }}_{{ $option_value->option_value_id }}_container"
                                             class="until_{{ $location->location_id }}_{{ $option_value->option_value_id }}_container"
-                                            {!! $option_value->out_of_stock ? '' : 'style="display: none"' !!} >
+                                            {!! $option_value->out_of_stock ? '' : 'style="display: none"' !!}  class="dropdown">
                                                 <button 
                                                 id="date_button_{{ $location->location_id }}_{{ $menu->menu_id }}_{{ $option->option_id }}_{{ $option_value->option_value_id }}" 
-                                                class="btn font-weight-bold p-0 dropdown-toggle text-secondary date_button_option_value_{{ $location->location_id }}_{{ $option_value->option_value_id }}" type="button" data-toggle="dropdown">{{$option_value->in_stock_date_text}}</button>
+                                                class="btn font-weight-bold p-0 dropdown-toggle text-secondary date_button_option_value_{{ $location->location_id }}_{{ $option_value->option_value_id }}" type="button" data-bs-toggle="dropdown">{{$option_value->in_stock_date_text}}</button>
                                                 <div class="dropdown-menu dropdown" aria-labelledby="dropdownMenuButton">
                                                     <a  class="dropdown-item in_stock_date_action" 
                                                         data-datepicker-value="{{ date(lang('cupnoodles.quickstock::default.date_format_php'), strtotime("+1 day"))}}"
