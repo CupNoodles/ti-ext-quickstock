@@ -120,7 +120,7 @@ body{
                                                         <input type="checkbox" 
                                                         name="out_of_stock" 
                                                         id="out_of_stock_{{ $location->location_id }}_{{ $menu->menu_id }}_{{ $option->option_id }}_{{ $option_value->option_value_id }}" 
-                                                        class="custom-control-input quickstock-option-checkbox out_of_stock_option_value_{{ $location->location_id }}_{{ $option_value->option_value_id }}" 
+                                                        class="custom-control-input quickstock-option-checkbox out_of_stock_option_value_{{ $location->location_id }}_{{ $option_value->option_value_id }} form-check-input" 
                                                         value="1"
                                                         data-location="{{ $location->location_id }}"
                                                         data-menu="{{ $menu->menu_id }}"
